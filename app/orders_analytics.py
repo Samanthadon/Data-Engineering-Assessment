@@ -1,7 +1,7 @@
 import pandas as pd
 "Complete thes functions or write your own to perform the following tasks"
 
-def calculate_profit_by_order(orders_df):
+def calculate_profit_by_order(orders_df: pd.DataFrame) -> pd.DataFrame:
     "Calculate profit for each order in the DataFrame"
     orders_df['Profit'] = orders_df.apply(
         lambda x: (x['List Price'] * (1 - x['Discount Percent'] / 100) - x['cost price']) * x['Quantity'],
@@ -9,7 +9,7 @@ def calculate_profit_by_order(orders_df):
     )
     return orders_df
 
-def calculate_most_profitable_region(orders_df):
+def calculate_most_profitable_region(orders_df: pd.DataFrame) -> dict:
     "Calculate the most profitable region and its profit"
     # Determine the Profit/Order
     orders_df = calculate_profit_by_order(orders_df)
