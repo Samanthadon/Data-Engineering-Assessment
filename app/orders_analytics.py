@@ -3,13 +3,20 @@ import pandas as pd
 
 def calculate_profit_by_order(orders_df):
     "Calculate profit for each order in the DataFrame"
-
+    orders_df['Profit'] = orders_df.apply(
+        lambda x: (x['List Price'] * (1 - x['Discount Percent'] / 100) - x['cost price']) * x['Quantity'],
+        axis=1
+    )
     return orders_df
 
 def calculate_most_profitable_region(orders_df):
     "Calculate the most profitable region and its profit"
-   
-    return
+    # Determine the Profit/Order
+    orders_df = calculate_profit_by_order(orders_df)
+    # Aggregate on Region using Profit and sort to put max Profit as first row
+    profit_by_region = orders_df.groupby('Region', as_index=False).agg({'Profit': 'sum'}).sort_values(by='Profit', ascending=False)
+    max_region_profit = profit_by_region.iloc[0].to_dict()
+    return max_region_profit
 
 def find_most_common_ship_method(orders_df):
     "Find the most common shipping method for each Category"

@@ -27,7 +27,8 @@ def lambda_handler(event, context):
         s3_path = get_s3_path_from_event(event)
         # TODO: read from S3 using Boto3 rather than local
         orders = pd.read_csv(s3_path)
-        print(orders.columns)
+        # Generate analytics report data
+        most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
 
     except Exception as e:
         print(e)
