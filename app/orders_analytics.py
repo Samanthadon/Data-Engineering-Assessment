@@ -4,7 +4,7 @@ import pandas as pd
 def calculate_profit_by_order(orders_df: pd.DataFrame) -> pd.DataFrame:
     "Calculate profit for each order in the DataFrame"
     orders_df['Profit'] = orders_df.apply(
-        lambda x: (x['List Price'] * (1 - x['Discount Percent'] / 100) - x['cost price']) * x['Quantity'],
+        lambda x: round((x['List Price'] * (1.0 - x['Discount Percent'] / 100.0) - x['cost price']) * x['Quantity'], 2),
         axis=1
     )
     return orders_df
