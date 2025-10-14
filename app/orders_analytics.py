@@ -32,7 +32,10 @@ def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
         ].reset_index(drop=True)
     return max_ship_method_category
 
-def find_number_of_order_per_category( orders_df):
+def find_number_of_order_per_category(orders_df: pd.DataFrame) -> pd.DataFrame:
     "find the number of orders for each Category and Sub Category"
-
-    return
+    # Aggregate count of orders over Category and Sub Category
+    category_subcategory_counts = orders_df.groupby(['Category', 'Sub Category'], as_index=False).agg(
+            Orders=('Order Id', 'count')
+        )
+    return category_subcategory_counts

@@ -30,6 +30,7 @@ def lambda_handler(event, context):
         # Generate analytics report data
         most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
         most_common_ship_mode =  orders_analytics.find_most_common_ship_method(orders)
+        orders_per_category_subcategory = orders_analytics.find_number_of_order_per_category(orders)
 
     except Exception as e:
         print(e)
