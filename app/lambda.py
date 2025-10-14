@@ -16,7 +16,22 @@ Modify this lambda function to perform the following questions
 
 def get_s3_path_from_event(event : dict) -> str:
     "Returns the S3 path from the lambda event record"
+    # TODO: correct to get actual S3 path not static local path
+    # Temporarily read local CSV for the sake of code development
+    return "./sample_orders.csv"
 
 def lambda_handler(event, context):
     "Lambda function to process S3 events and perform analytics on orders data"
+    try:
+        # Read CSV from S3
+        s3_path = get_s3_path_from_event(event)
+        # TODO: read from S3 using Boto3 rather than local
+        orders = pd.read_csv(s3_path)
+        print(orders.columns)
+
+    except Exception as e:
+        print(e)
+
+lambda_handler({},"")
+
 
