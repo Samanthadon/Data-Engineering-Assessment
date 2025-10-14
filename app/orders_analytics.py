@@ -9,14 +9,14 @@ def calculate_profit_by_order(orders_df: pd.DataFrame) -> pd.DataFrame:
     )
     return orders_df
 
-def calculate_most_profitable_region(orders_df: pd.DataFrame) -> dict:
+def calculate_most_profitable_region(orders_df: pd.DataFrame) -> pd.DataFrame:
     "Calculate the most profitable region and its profit"
     # Determine the Profit/Order
     orders_df = calculate_profit_by_order(orders_df)
     # Aggregate on Region using Profit and sort to put max Profit as first row
     profit_by_region = orders_df.groupby('Region', as_index=False).agg({'Profit': 'sum'}).sort_values(by='Profit', ascending=False)
     # Note: This will only return 1 row. If there is a "tie" only the first row will be returned
-    max_region_profit = profit_by_region.iloc[0].to_dict()
+    max_region_profit = profit_by_region.loc[[0]]
     return max_region_profit
 
 def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
