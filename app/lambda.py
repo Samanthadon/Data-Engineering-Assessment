@@ -31,6 +31,11 @@ def lambda_handler(event, context):
         most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
         most_common_ship_mode =  orders_analytics.find_most_common_ship_method(orders)
         orders_per_category_subcategory = orders_analytics.find_number_of_order_per_category(orders)
+        # Write CSV to S3
+        # TODO: write to s3 rather than local
+        most_profitiable_region.to_csv('most_profitable_region.csv', index=False)
+        most_common_ship_mode.to_csv('most_common_ship_mode_per_category.csv', index=False)
+        orders_per_category_subcategory.to_csv('orders_per_category_sub_category.csv', index=False)
 
     except Exception as e:
         print(e)
