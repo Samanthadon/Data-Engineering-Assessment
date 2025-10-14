@@ -8,7 +8,7 @@ import orders_analytics
 """
 Modify this lambda function to perform the following questions
 
-1. Find the most profitable Region, and its profit
+Done - 1. Find the most profitable Region, and its profit
 2. What shipping method is most common for each Category
 3. Output a glue table containing the number of orders for each Category and Sub Category
 """
@@ -29,6 +29,7 @@ def lambda_handler(event, context):
         orders = pd.read_csv(s3_path)
         # Generate analytics report data
         most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
+        most_common_ship_mode =  orders_analytics.find_most_common_ship_method(orders)
 
     except Exception as e:
         print(e)

@@ -18,10 +18,17 @@ def calculate_most_profitable_region(orders_df: pd.DataFrame) -> dict:
     max_region_profit = profit_by_region.iloc[0].to_dict()
     return max_region_profit
 
-def find_most_common_ship_method(orders_df):
+def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
     "Find the most common shipping method for each Category"
-    
-    return 
+    # Aggregate count of orders on Category, Ship Mode
+    ship_mode_counts = orders_df.groupby(['Category','Ship Mode'], as_index=False).agg(
+            Order_count=('Order Id', 'count')
+        )
+    # Utilize groupby() to get id of max Order_count for each Category
+    max_ship_method_category = ship_mode_counts.loc[
+            ship_mode_counts.groupby('Category')['Order_count'].idxmax()
+        ].reset_index(drop=True)
+    return max_ship_method_category
 
 def find_number_of_order_per_category( orders_df):
     "find the number of orders for each Category and Sub Category"
