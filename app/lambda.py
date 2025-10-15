@@ -15,13 +15,13 @@ Done - 1. Find the most profitable Region, and its profit
 
 
 def get_s3_path_from_event(event : dict) -> str:
-    "Returns the S3 path from the lambda event record"
+    """Returns the S3 path from the lambda event record"""
     # TODO: correct to get actual S3 path not static local path
     # Temporarily read local CSV for the sake of code development
     return "./sample_orders.csv"
 
 def lambda_handler(event, context):
-    "Lambda function to process S3 events and perform analytics on orders data"
+    """Lambda function to process S3 events and perform analytics on orders data"""
     try:
         # Read CSV from S3
         s3_path = get_s3_path_from_event(event)
@@ -37,8 +37,12 @@ def lambda_handler(event, context):
         most_common_ship_mode.to_csv('most_common_ship_mode_per_category.csv', index=False)
         orders_per_category_subcategory.to_csv('orders_per_category_sub_category.csv', index=False)
 
+    except FileNotFoundError as fe:
+        print(f"No file found at {fe.filename}")
+    except orders_analytics.MissingColumns as mc:
+        print(f"Input Data missing critical columns. {mc.message}")
     except Exception as e:
-        print(e)
+        print(e.message)
 
 lambda_handler({},"")
 
