@@ -1,4 +1,4 @@
-candidate_name="Samantha Eidson"
+candidate_name="Samantha-Eidson"
 aws_profile="nmd-assessment"
 
 env     = "dev"
