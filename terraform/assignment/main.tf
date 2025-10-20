@@ -1,6 +1,3 @@
-## Update the following terraform code to meet the project requirements
-## We have provided some sample code to help you get started
-
 resource "aws_s3_bucket" "input_s3" {
   bucket = "${local.app_name}-input-bucket"
   tags = merge({
