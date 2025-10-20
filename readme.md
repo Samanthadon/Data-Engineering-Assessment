@@ -259,11 +259,9 @@ The Order Processing Lambda function is invoked via an S3 bucket notification oc
 - Terraform
 - AWS CLI
 
-## Setup
-Local setup steps
-
 ## Deploy
 Deployment Instructions
 
 ## Testing
-Steps to Test code
+To test the code, upload `sample_orders.csv` to the [input S3 bucket](#inputs) and check for output in the [output S3 bucket](#outputs). <br>
+At this time, there are no Unit tests for the Python code. This is for future implementation, but not in the scope of the current request.
