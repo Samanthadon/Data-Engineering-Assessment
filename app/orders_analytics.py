@@ -23,7 +23,7 @@ def check_for_required_columns(columns_used: Union[str, List[str]], columns_avai
 
 def calculate_profit_by_order(orders_df: pd.DataFrame) -> pd.DataFrame:
     """Calculate profit for each order in the DataFrame"""
-    check_for_required_columns(['Profit', 'List Price', 'Discount Percent', 'cost price', 'Quantity'], orders_df.columns.to_list())
+    check_for_required_columns(['List Price', 'Discount Percent', 'cost price', 'Quantity'], orders_df.columns.to_list())
     orders_df['Profit'] = orders_df.apply(
         lambda x: round((x['List Price'] * (1.0 - x['Discount Percent'] / 100.0) - x['cost price']) * x['Quantity'], 2),
         axis=1
