@@ -43,7 +43,7 @@ def calculate_most_profitable_region(orders_df: pd.DataFrame) -> pd.DataFrame:
 
 def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
     """Find the most common shipping method for each Category"""
-    check_for_required_columns(['Category', 'Ship Mode'], orders_df.columns.to_list())
+    check_for_required_columns(['Category', 'Ship Mode', 'Order Id'], orders_df.columns.to_list())
     # Aggregate count of orders on Category, Ship Mode
     ship_mode_counts = orders_df.groupby(['Category','Ship Mode'], as_index=False).agg(
             Order_count=('Order Id', 'count')
@@ -57,7 +57,7 @@ def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
 
 def find_number_of_order_per_category(orders_df: pd.DataFrame) -> pd.DataFrame:
     """Find the number of orders for each Category and Sub Category"""
-    check_for_required_columns(['Category', 'Sub Category'], orders_df.columns.to_list())
+    check_for_required_columns(['Category', 'Sub Category', 'Order Id'], orders_df.columns.to_list())
     # Aggregate count of orders over Category and Sub Category
     category_subcategory_counts = orders_df.groupby(['Category', 'Sub Category'], as_index=False).agg(
             Orders=('Order Id', 'count')
