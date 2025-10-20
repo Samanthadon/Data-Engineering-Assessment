@@ -56,6 +56,7 @@ def write_output_data_to_s3(data: pd.DataFrame, key: str) -> bool:
 
     except Exception as e:
         write_successful = False
+        # Handle exception here, but do not propagate so that other files may be successfully written
         print(e.message)
     finally:
         # Return whether write to S3 was sucessful for a particular file
@@ -76,13 +77,7 @@ def lambda_handler(event, context):
         orders_per_category_subcategory_successful = write_output_data_to_s3(orders_per_category_subcategory, 'orders_per_category_sub_category.csv')
         if not (most_profitable_successful & most_common_ship_mode_successful & orders_per_category_subcategory_successful):
             raise Exception("At least one file failed to write successfully to S3")
-    except FileNotFoundError as fe:
-        print(f"No file found at {fe.filename}")
     except orders_analytics.MissingColumns as mc:
         print(f"Input Data missing critical columns. {mc.message}")
     except Exception as e:
         print(e.message)
-
-lambda_handler({},"")
-
-
