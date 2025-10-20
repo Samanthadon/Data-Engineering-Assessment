@@ -10,6 +10,16 @@ resource "aws_iam_role" "lambda_exec_role" {
           Service = "lambda.amazonaws.com"
         },
         Action = "sts:AssumeRole"
+      },
+      {
+        Effect = "Allow",
+        Action = "s3:PutObject",
+        Resource = "${aws_s3_bucket.output_s3.arn}/*"
+      },
+      {
+        Effect = "Allow",
+        Action = "s3:GetObject",
+        Resource = "${aws_s3_bucket.input_s3.arn}/*"
       }
     ]
   })
