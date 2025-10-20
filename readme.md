@@ -1,5 +1,5 @@
 # Order Processing Lambda
-Description of project
+Peforms analytics on a CSV file after upload to input S3 bucket
 
 ## Project Structure
 ```text
