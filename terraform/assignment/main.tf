@@ -1,10 +1,17 @@
-## Update the following terraform code to meet the project requirements
-## We have provided some sample code to help you get started
-
 resource "aws_s3_bucket" "input_s3" {
   bucket = "${local.app_name}-input-bucket"
   tags = merge({
         Name        = "${local.app_name}-input-bucket"
+        Environment = "${var.env}"
+    }, local.default_tags
+  )
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "output_s3" {
+  bucket = "${local.app_name}-output-bucket"
+  tags = merge({
+        Name        = "${local.app_name}-output-bucket"
         Environment = "${var.env}"
     }, local.default_tags
   )
