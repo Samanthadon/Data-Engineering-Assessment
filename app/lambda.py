@@ -1,6 +1,8 @@
 import sys
 import json
 import os
+import io
+import boto3
 import pandas as pd
 from typing import Tuple
 
@@ -14,6 +16,7 @@ Done - 1. Find the most profitable Region, and its profit
 3. Output a glue table containing the number of orders for each Category and Sub Category
 """
 
+s3 = boto3.client('s3')
 
 def get_s3_path_from_event(event : dict) -> Tuple[str, str]:
     """Returns the S3 path from the lambda event record"""
@@ -27,13 +30,26 @@ def get_s3_path_from_event(event : dict) -> Tuple[str, str]:
     else:
         return (input_bucket, input_key)
 
+def get_input_data_from_s3(event: dict) -> pd.DataFrame:
+    try:
+        input_s3_bucket, input_s3_key = get_s3_path_from_event(event)
+        file_obj = s3.get_object(Bucket=input_s3_bucket, Key=input_s3_key)
+        input_df = pd.read_csv(io.BytesIO(file_obj['Body'].read()))
+    except KeyError as ke:
+        # KeyError caused by get_s3_path_from_event() already handled and should be propagated 
+        raise ke
+    except Exception as e:
+        print(f'Unable to read input file from S3 path: {input_s3_bucket}/{input_s3_key}')
+        raise e
+    else:
+        return input_df
+
+
 def lambda_handler(event, context):
     """Lambda function to process S3 events and perform analytics on orders data"""
     try:
         # Read CSV from S3
-        input_s3_bucket, input_s3_key = get_s3_path_from_event(event)
-        # TODO: read from S3 using Boto3 rather than local
-        orders = pd.read_csv(s3_path)
+        orders = get_input_data_from_s3(event)
         # Generate analytics report data
         most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
         most_common_ship_mode =  orders_analytics.find_most_common_ship_method(orders)
