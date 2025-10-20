@@ -15,7 +15,7 @@ Done - 1. Find the most profitable Region, and its profit
 2. What shipping method is most common for each Category
 3. Output a glue table containing the number of orders for each Category and Sub Category
 """
-
+OUTPUT_S3_BUCKET = 'nmd-assignment-Samantha-Eidson-output-bucket'
 s3 = boto3.client('s3')
 
 def get_s3_path_from_event(event : dict) -> Tuple[str, str]:
@@ -44,6 +44,22 @@ def get_input_data_from_s3(event: dict) -> pd.DataFrame:
     else:
         return input_df
 
+def write_output_data_to_s3(data: pd.DataFrame, key: str) -> bool:
+    try:
+        write_successful = True
+        with io.StringIO() as buffer:
+            data.to_csv(buffer, index=False)
+            response = s3.put_object(Bucket=OUTPUT_S3_BUCKET, Key=key, Body=buffer.getvalue())
+            if response.get('ResponseMetadata',{}).get("HTTPStatusCode") != 200:
+                print(f'Failed to write {OUTPUT_S3_BUCKET}/{key} to S3')
+                write_successful = False
+
+    except Exception as e:
+        write_successful = False
+        print(e.message)
+    finally:
+        # Return whether write to S3 was sucessful for a particular file
+        return write_successful
 
 def lambda_handler(event, context):
     """Lambda function to process S3 events and perform analytics on orders data"""
@@ -51,15 +67,15 @@ def lambda_handler(event, context):
         # Read CSV from S3
         orders = get_input_data_from_s3(event)
         # Generate analytics report data
-        most_profitiable_region = orders_analytics.calculate_most_profitable_region(orders)
+        most_profitable_region = orders_analytics.calculate_most_profitable_region(orders)
         most_common_ship_mode =  orders_analytics.find_most_common_ship_method(orders)
         orders_per_category_subcategory = orders_analytics.find_number_of_order_per_category(orders)
         # Write CSV to S3
-        # TODO: write to s3 rather than local
-        most_profitiable_region.to_csv('most_profitable_region.csv', index=False)
-        most_common_ship_mode.to_csv('most_common_ship_mode_per_category.csv', index=False)
-        orders_per_category_subcategory.to_csv('orders_per_category_sub_category.csv', index=False)
-
+        most_profitable_successful = write_output_data_to_s3(most_profitable_region, 'most_profitable_region.csv')
+        most_common_ship_mode_successful = write_output_data_to_s3(most_common_ship_mode, 'most_common_ship_mode_per_category.csv')
+        orders_per_category_subcategory_successful = write_output_data_to_s3(orders_per_category_subcategory, 'orders_per_category_sub_category.csv')
+        if not (most_profitable_successful & most_common_ship_mode_successful & orders_per_category_subcategory_successful):
+            raise Exception("At least one file failed to write successfully to S3")
     except FileNotFoundError as fe:
         print(f"No file found at {fe.filename}")
     except orders_analytics.MissingColumns as mc:
