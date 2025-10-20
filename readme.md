@@ -254,7 +254,10 @@ The logic was developed under the following assumptions:
 The Order Processing Lambda function is invoked via an S3 bucket notification occuring at Object Creation for any .csv file in the [input bucket](#inputs)
 
 ## Requirements
-Install requirements
+- Python 3.12
+- Docker
+- Terraform
+- AWS CLI
 
 ## Setup
 Local setup steps
