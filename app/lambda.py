@@ -2,6 +2,7 @@ import sys
 import json
 import os
 import pandas as pd
+from typing import Tuple
 
 import orders_analytics
 
@@ -14,17 +15,23 @@ Done - 1. Find the most profitable Region, and its profit
 """
 
 
-def get_s3_path_from_event(event : dict) -> str:
+def get_s3_path_from_event(event : dict) -> Tuple[str, str]:
     """Returns the S3 path from the lambda event record"""
-    # TODO: correct to get actual S3 path not static local path
-    # Temporarily read local CSV for the sake of code development
-    return "./sample_orders.csv"
+    try:
+        record_s3 = event['Records'][0]['s3']
+        input_bucket = record_s3['bucket']['name']
+        input_key = record_s3['object']['key']
+    except KeyError as ke:
+        print("Unable to read input S3 bucket/key from Lambda Event")
+        raise ke
+    else:
+        return (input_bucket, input_key)
 
 def lambda_handler(event, context):
     """Lambda function to process S3 events and perform analytics on orders data"""
     try:
         # Read CSV from S3
-        s3_path = get_s3_path_from_event(event)
+        input_s3_bucket, input_s3_key = get_s3_path_from_event(event)
         # TODO: read from S3 using Boto3 rather than local
         orders = pd.read_csv(s3_path)
         # Generate analytics report data
