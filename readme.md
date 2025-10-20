@@ -260,8 +260,8 @@ The Order Processing Lambda function is invoked via an S3 bucket notification oc
 - AWS CLI
 
 ## Deploy
-Deployment Instructions
+Deployment instructions are provided in [instructions.md](instructions.md#deploying-the-assignment)
 
 ## Testing
-To test the code, upload `sample_orders.csv` to the [input S3 bucket](#inputs) and check for output in the [output S3 bucket](#outputs). <br>
+To test the code, upload `sample_orders.csv` to the [input S3 bucket](#inputs) and check for output in the [output S3 bucket](#outputs). For more detail see [instructions.md](instructions.md#testing-with-sample-orders) <br>
 At this time, there are no Unit tests for the Python code. This is for future implementation, but not in the scope of the current request.
