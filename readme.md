@@ -251,7 +251,7 @@ The logic was developed under the following assumptions:
   - Depending on downstream architecture, this may be the case
 
 ## Usage
-How the Lambda function is invoked
+The Order Processing Lambda function is invoked via an S3 bucket notification occuring at Object Creation for any .csv file in the [input bucket](#inputs)
 
 ## Requirements
 Install requirements
