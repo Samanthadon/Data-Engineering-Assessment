@@ -46,12 +46,12 @@ def find_most_common_ship_method(orders_df: pd.DataFrame) -> pd.DataFrame:
     check_for_required_columns(['Category', 'Ship Mode', 'Order Id'], orders_df.columns.to_list())
     # Aggregate count of orders on Category, Ship Mode
     ship_mode_counts = orders_df.groupby(['Category','Ship Mode'], as_index=False).agg(
-            Order_count=('Order Id', 'count')
+            Orders=('Order Id', 'count')
         )
     # Utilize groupby() to get id of max Order_count for each Category
     # Note: This will only return 1 row per category. If there is a "tie" the first listed row is selected
     max_ship_method_category = ship_mode_counts.loc[
-            ship_mode_counts.groupby('Category')['Order_count'].idxmax()
+            ship_mode_counts.groupby('Category')['Orders'].idxmax()
         ].reset_index(drop=True)
     return max_ship_method_category
 
